@@ -1,4 +1,4 @@
-function plot_results(x, x_hat, e_norm, y, sim_steps)
+function plot_results(x, x_hat, e_norm, y, sim_steps, active_delays_log)
     % PLOT_RESULTS Visualizes the simulation results.
     % 
     % Inputs:
@@ -7,15 +7,25 @@ function plot_results(x, x_hat, e_norm, y, sim_steps)
     %   e_norm - Estimation error norm (1 x sim_steps+1)
     %   y - Measured output trajectory (p x sim_steps)
     %   sim_steps - Total simulation steps
+    %   active_delays_log - Log of active delays per channel (p x sim_steps) (Optional)
+
+    if nargin < 6
+        active_delays_log = [];
+    end
     
     n = size(x, 1);
     p = size(y, 1);
     time = 0:sim_steps;
     
-    figure('Position', [100, 100, 1200, 800]);
+    figure('Position', [100, 100, 1200, 1000]);
+
+    num_subplots = 3;
+    if ~isempty(active_delays_log)
+        num_subplots = 4;
+    end
     
     % Plot Error Norm (Log Scale)
-    subplot(3, 1, 1);
+    subplot(num_subplots, 1, 1);
     semilogy(time, e_norm, 'LineWidth', 2);
     title('Estimation Error Norm ||e_k||');
     xlabel('Time Step k');
@@ -23,7 +33,7 @@ function plot_results(x, x_hat, e_norm, y, sim_steps)
     grid on;
     
     % Plot States
-    subplot(3, 1, 2);
+    subplot(num_subplots, 1, 2);
     hold on;
     colors = lines(n);
     for i = 1:n
@@ -38,7 +48,7 @@ function plot_results(x, x_hat, e_norm, y, sim_steps)
     hold off;
     
     % Plot Outputs with Outliers
-    subplot(3, 1, 3);
+    subplot(num_subplots, 1, 3);
     hold on;
     colors = lines(p);
     for j = 1:p
@@ -51,6 +61,22 @@ function plot_results(x, x_hat, e_norm, y, sim_steps)
     grid on;
     hold off;
     
+    % Plot Active Delays
+    if ~isempty(active_delays_log)
+        subplot(num_subplots, 1, 4);
+        hold on;
+        for j = 1:p
+            stairs(1:sim_steps, active_delays_log(j, :), 'Color', colors(j, :), 'LineWidth', 1.5, 'DisplayName', sprintf('Channel %d', j));
+        end
+        title('Median Filter Active Delay Selection Index');
+        xlabel('Time Step k');
+        ylabel('Delay Index (0 to 2q)');
+        yticks(0:(max(active_delays_log(:))+1));
+        legend('Location', 'best');
+        grid on;
+        hold off;
+    end
+
     % Adjust layout
     try
         sgtitle('Median-Filtered Observer Performance');

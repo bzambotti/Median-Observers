@@ -1,4 +1,4 @@
-function [x_hat, e_norm] = simulate_median_observer(A, B, C, L, x, u, y, q)
+function [x_hat, e_norm, active_delays_log] = simulate_median_observer(A, B, C, L, x, u, y, q)
     % SIMULATE_MEDIAN_OBSERVER Simulates the robust median-filtered observer.
     % 
     % Inputs:
@@ -12,6 +12,7 @@ function [x_hat, e_norm] = simulate_median_observer(A, B, C, L, x, u, y, q)
     % Outputs:
     %   x_hat - Estimated state trajectory (n x sim_steps+1)
     %   e_norm - Estimation error norm (1 x sim_steps+1)
+    %   active_delays_log - Log of active delays per channel (p x sim_steps)
     
     n = size(A, 1);
     p = size(C, 1);
@@ -33,9 +34,10 @@ function [x_hat, e_norm] = simulate_median_observer(A, B, C, L, x, u, y, q)
     
     x_hat = zeros(n, sim_steps + 1);
     e_norm = zeros(1, sim_steps + 1);
+    active_delays_log = zeros(p, sim_steps);
     
-    % Initialize observer with some error
-    x_hat(:, 1) = x(:, 1) + 2 * randn(n, 1);
+    % Initialize observer with worst-case error (starting from zero)
+    x_hat(:, 1) = zeros(n, 1);
     e_norm(1) = norm(x(:, 1) - x_hat(:, 1));
     
     % Memory buffer for the innovations (p x N)
@@ -66,6 +68,8 @@ function [x_hat, e_norm] = simulate_median_observer(A, B, C, L, x, u, y, q)
             active_delays(j) = idx - 1;
         end
         
+        active_delays_log(:, k) = active_delays';
+
         % Find the corresponding mode index
         mode_idx = 1;
         for m = 1:num_modes
