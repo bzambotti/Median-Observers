@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import numpy as np, json, matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -85,6 +88,8 @@ def main():
         a_.set_xticks(qs)
 
     fig.tight_layout(pad=.2, w_pad=.9, h_pad=.7)
+    import os
+    os.makedirs('Fig', exist_ok=True)
     fig.savefig('Fig/all.pdf', bbox_inches='tight', pad_inches=0.01)
     print('Fig/all.pdf saved successfully.')
 
