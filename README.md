@@ -37,9 +37,3 @@ The LMI sweeps take about 15-30 min with MOSEK.
 
 Run once with `recompute = true` so that Fig. 2 comes from saved results.
 
-## History
-
-Older exploratory scripts (Lur'e and switched co-design, toy example) are in the
-first commit (`7cb2d00`). The branches `median-observer-worst-case-*` (MIMO
-worst case) and `python-codebase-refactor-*` (Python port) were created by an
-automated agent and are not used for the paper.
