@@ -37,3 +37,15 @@ The LMI sweeps take about 15-30 min with MOSEK.
 
 Run once with `recompute = true` so that Fig. 2 comes from saved results.
 
+## Citation
+@unpublished{zambotti_2026_median,
+  TITLE = {{Median-Filtered Observers for Outlier Rejection in Discrete-Time Linear Systems}},
+  AUTHOR = {Zambotti, Beatrice and Astolfi, Daniele and Zaccarian, Luca and Nagahara, Masaaki},
+  URL = {https://hal.science/hal-05869945},
+  NOTE = {working paper or preprint},
+  YEAR = {2026},
+  MONTH = Nov,
+  PDF = {https://hal.science/hal-05869945v1/file/ECC___Median_Filter_Observers.pdf},
+  HAL_ID = {hal-05869945},
+  HAL_VERSION = {v1},
+}
